@@ -1,1 +1,5 @@
+# Ignoring Environment Files
 .env
+
+# Ignoring the temporary air directory
+/tmp

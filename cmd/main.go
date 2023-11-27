@@ -1,20 +1,31 @@
 package main
 
 import (
-	"github.com/RaviVendraminideAlmeida/url-shortener/handlers"
+	"log"
+
+	"github.com/RaviVendraminideAlmeida/url-shortener/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html/v2"
 )
 
 func main() {
-	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return handlers.GetURL(c)
+	database.ConnectDB()
+
+	engine := html.New("./views", ".html")
+
+	app := fiber.New(fiber.Config{
+		Views: engine,
 	})
 
-	err := app.Listen(":3000")
+	app.Static("/", "./public")
 
-	if err != nil {
-		panic(err)
-	}
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Render("index", fiber.Map{
+			"Title": "URL Shortener",
+		})
+	})
+
+	log.Fatal(app.Listen(":3000"))
+
 }
